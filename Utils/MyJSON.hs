@@ -2,7 +2,8 @@
 module Utils.MyJSON   
     ( 
      getObjectJS, getArrayObjectJS, getValueJS, getArrayJS, getTryValueJS,
-     getErr,      error2EmptyList,  checkAllOk, getOnlyOk,  myEncodeJSON,
+     getErr, getErr_, error2EmptyList, checkAllOk, checkAllOk_, getOnlyOk,  
+     myEncodeJSON,
      module Text.JSON, 
      module Text.JSON.Generic, 
      module Text.JSON.Types
@@ -68,6 +69,10 @@ getTryValueJS              jsO                 ks
 getErr :: Result a  -> String
 getErr    (Error s) =  s
 getErr    x         =  ""
+--------------------------------------------------------------------------
+getErr_ :: Result_ a  -> String
+getErr_    (Error_ s) =  s
+getErr_    x         =  ""
 --------------------------------------------------------------------------  
 myEncodeJSON :: Data a => Result a -> String
 myEncodeJSON             (Ok x)    =  encodeJSON x
@@ -84,6 +89,15 @@ checkAllOk    x
         where 
               check :: Result a -> Bool
               check    (Ok a)   =  True
+              check    x        =  False 
+--------------------------------------------------------------------------
+checkAllOk_ :: [Result_ a] -> Result_ [a]
+checkAllOk_    x 
+    | all check x        =  Ok_ (fmap (\(Ok_ a) -> a) x)
+    | otherwise          =  Error_ (concat $ fmap getErr_ x)
+        where 
+              check :: Result_ a -> Bool
+              check    (Ok_ a)   =  True
               check    x        =  False 
 -------------------------------------------------------------------------- 
 getOnlyOk :: [Result a] -> Result [a]
