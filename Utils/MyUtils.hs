@@ -3,7 +3,7 @@ module Utils.MyUtils
     ( 
      Result_ (..),
      split, flip123_312, eqtol, fst3, snd3, trd3, fst4, snd4, trd4, fth4,
-     concatResult, sign, pass2EOM
+     concatResult, sign, pass2EOM, zip9
     ) where
 
 --------------------------------------------------------------------------
@@ -99,3 +99,10 @@ pass2EOM dt = fromGregorian y m eom
     where (y,m,d) = toGregorian dt
           isLeap  = isLeapYear y
           eom     = monthLength isLeap m
+
+--------------------------------------------------------------------------
+zip9 :: [a1] -> [a2] -> [a3] -> [a4] -> [a5] -> [a6] -> [a7] -> [a8] -> [a9]
+     -> [(a1, a2, a3, a4, a5, a6, a7, a8, a9)]
+zip9 (a1:a1s) (a2:a2s) (a3:a3s) (a4:a4s) (a5:a5s) (a6:a6s) (a7:a7s) (a8:a8s) (a9:a9s)
+    = (a1, a2, a3, a4, a5, a6, a7, a8, a9) : (zip9 a1s a2s a3s a4s a5s a6s a7s a8s a9s)
+zip9 _ _ _ _ _ _ _ _ _ = []
